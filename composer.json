@@ -1,0 +1,14 @@
+{
+    "name": "kelt/htmlCss",
+    "authors": [
+        {
+            "name": "Your Name",
+            "email": "you@example.com"
+        }
+    ],
+    "require": {
+        "ext-mbstring": "*",
+        "ext-json": "*",
+        "ext-pdo": "*"
+    }
+}

@@ -1,0 +1,140 @@
+body {
+    background: #f8f8f8;
+}
+
+.menu li {
+
+    /*font-family: Serif*/
+    list-style-type: none;
+    font-size: 20px;
+
+}
+a.linkMenu {
+    color: #46a92b
+}
+.headersGoods {
+    color: black;
+    font-size: 18px;
+    font-weight: 400;
+    background: #eaeaea;
+}
+
+.characteristic {
+   color: #ca6864;
+    font-weight: 15px;
+}
+
+.description {
+    color: #484343;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    text-align: left;
+}
+
+.shortDiscribe {
+    color: #707070;
+    font-size: 14px;
+    font-style: italic;
+    line-height: 16px;
+    text-align: left;
+}
+/*.shortDiscribe::first-letter {*/
+/*    font-family: serif;*/
+/*    font-size: 30px;*/
+/*    color: red;*/
+input {
+    font-size: 17px;
+    color: rebeccapurple;
+    font-style: inherit;
+}
+.userMassage {
+    color: #ca6864;
+}
+
+input.userMassage {
+    width: 150px;
+    height: 30px;
+}
+
+
+/*NE RABOTAET!!!!!!!!!!!!!*/
+
+/*input.userMassage[type="text"]:first-letter {*/
+/*    font-size: 30px;*/
+/*    color: red;*/
+/*    font-style: inherit;*/
+/*}*/
+
+/*input.userMassage:focus {*/
+/*    outline: none;*/
+/*}*/
+
+/*form input.userMassage::-webkit-input-placeholder {*/
+/*        color: red;*/
+/*}*/
+
+/*form:nth-child(2) {*/
+/*    color: red;*/
+/*}*/
+
+a:hover {
+    color: #ca6864;
+}
+
+.header img {
+    width: 170px;
+
+}
+img.img {
+    border: 5px solid;
+    border-color: #697da9;
+}
+
+img.img:hover {
+    border: 5px solid;
+    border-color: white;
+}
+
+table td {
+    width: 20px;
+    height: 20px;
+    border: 1px;
+    background: #46a92b;
+}
+
+.tableName {
+    height: 40px;
+}
+
+footer {
+    clear: both;
+}
+
+.massageLogin {
+    width: 150px;
+    height: 30px;
+    position: relative;
+    left: 40px;
+
+}
+.massagePassword {
+    width: 150px;
+    height: 30px;
+    position: relative;
+    left: 13px;
+}
+
+.label, .massageLogin, .massagePassword, button {
+    margin-top: 7px;
+
+}
+
+#buttonRegistration{
+    float: left;
+    margin-right: 10px;
+}
+
+
+
+
