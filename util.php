@@ -37,7 +37,7 @@ function upload_image($image, $folder) {
     }
 
     // You should also check filesize here.
-    if ($image['size'] > 4000000) {
+    if ($image['size'] > 30000000) {
         throw new RuntimeException('Exceeded filesize limit.');
     }
 
