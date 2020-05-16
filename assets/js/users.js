@@ -8,7 +8,7 @@ let params = {
 };
 
 function paginationUsers(limit, offset) {
-   
+    
 let i = offset;
 
 paginationContainer.innerHTML = "";
@@ -62,7 +62,7 @@ function getUsers(limit, offset) {
                 <div class="card-body">
                     <h5 class="card-title">${user.login}</h5>
                     <p class="card-text">info</p>
-                    <a href="/users/${user.uuid}" class="btn btn-success">View</a>
+                    <a href="/users/${user.id}" class="btn btn-success">View</a>
                     </form>
                 </div>
             </div>`;

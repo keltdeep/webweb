@@ -1,5 +1,5 @@
 let form = document.getElementById("user-edit-form");
-let userUuidInput = document.getElementById('user-uuid');
+let userIdInput = document.getElementById('user-id');
 let hasActiveCheckbox = !!document.getElementById('exampleCheck1');
 
 function getUserFormData() {
@@ -19,7 +19,7 @@ function getUserFormData() {
 
 
 function editUser(userAttributes) {
-    $.post("/api/users/" + userUuidInput.value, userAttributes, () => {
+    $.post("/api/users/" + userIdInput.value, userAttributes, () => {
         location.reload();
     });
     
@@ -29,7 +29,7 @@ function createUser(userAttributes) {
     
     $.post("/api/users", userAttributes, (user) => {
         
-        location.pathname = '/users/' + user.uuid;
+        location.pathname = '/users/' + user.id;
     });
     
 }

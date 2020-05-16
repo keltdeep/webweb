@@ -49,9 +49,9 @@ if (startsWith($requestUri, "/api/users/")) {
     header('Content-Type: application/json');
 
     $path = explode("/", $requestUri);
-    $userUuid = $path[count($path) - 1];
+    $userId = $path[count($path) - 1];
     
-    $user = getUser($userUuid);
+    $user = getUser($userId);
     
 
     if (is_null($user)) {
@@ -60,7 +60,7 @@ if (startsWith($requestUri, "/api/users/")) {
     }
 
     if ($requestMethod == "GET") {
-        echo json_encode(getUser($userUuid));
+        echo json_encode(getUser($userId));
         
         die();
     }
@@ -98,13 +98,13 @@ if (startsWith($requestUri, "/api/users/")) {
             $attributes["active"] = false;
         }
        
-        editUser($userUuid, $attributes);
+        editUser($userId, $attributes);
         header('Location: /users');
         die();
     }
 
     if ($requestMethod == "DELETE") {
-        deleteUser($userUuid);
+        deleteUser($userId);
         die();
     }
 }
@@ -124,7 +124,7 @@ function handleEdit($user) {
     $jsScripts = ['/assets/js/users-edit.js'];
     $srcLogotypes = ["/img/log.jpg"];
     $srcCsses = ["/style.css"];
-    $userExists = isset($user["uuid"]);
+    $userExists = isset($user["id"]);
     $handleRequest = function() use ($user, $userExists) {
         include "templates/userEdit.php";
     };
@@ -138,7 +138,7 @@ function handleCreate() {
     $srcLogotypes = ["/img/log.jpg"];
     $srcCsses = ["../style.css"];
     $user = ["active" => true];
-    $userExists = isset($user["uuid"]);
+    $userExists = isset($user["id"]);
     
     $handleRequest = function() use ($user, $userExists) {
        
@@ -157,9 +157,9 @@ if ($requestUri == "/users/create") {
 if (startsWith($requestUri, "/users/")) {
     $path = explode("/", $requestUri);
     
-    $userUuid = $path[2];
+    $userId = $path[2];
     
-    $user = getUser($userUuid);
+    $user = getUser($userId);
     
     if (is_null($user)) {
         http_response_code(404);

@@ -1,86 +1,89 @@
 <?php
 
 include "util.php";
-
-define("USERS_FILE", "users-file.json");
+/**
+ * @param $login
+ * @param $password
+ * @return mixed
+ * @throws LengthException password length < 6
+ * @throws InvalidArgumentException login is not unique
+ */
 
 function createUser($login, $password) {
-    $uuid = randomUuid();
-
     if (mb_strlen($password) < 6) {
-        throw new Exception('invalid password');
+        throw new LengthException("invalid password");
     }
 
-    $duplicates = array_filter(getUsers(), function ($user) use ($login) {
-        return $user["login"] == $login;
-    });
+    $pdo = getConnection();
+    $statement = $pdo->prepare("insert into users(login, password) values(?, ?) returning *");
 
-    if (count($duplicates) > 0) {
-        throw new Exception("duplicate login");
+    try {
+        $statement->execute([$login, password_hash($password, PASSWORD_BCRYPT)]);
+        return $statement->fetch();
+    } catch (PDOException $exception) {
+        throw new InvalidArgumentException("duplicate login");
+    }
+}
+
+
+
+function deleteUser($id) {
+    editUser($id, ["active" => false]);
+}
+
+/**
+ * @param $user
+ * @param $attributes
+ * @throws LengthException password length < 6
+ * @throws InvalidArgumentException login is not unique
+ */
+
+function editUser($user, $attributes) {
+    if (!is_null($attributes['password']) && mb_strlen($attributes['password']) < 6) {
+        throw new LengthException("invalid password");
     }
 
-    $users = getUsers();
-    $user = [
-        "uuid" => $uuid,
-        "login" => $login,
-        "password" => password_hash($password, PASSWORD_BCRYPT),
-        "active" => true
-    ];
-    if (!$_FILES["picture"]["error"] == UPLOAD_ERR_NO_FILE) {
-        $folder = '/home/kelt/WebstormProjects/htmlCss/uploads';
-        $file_path = upload_image($_FILES["picture"], $folder);
-        $file_path_exploded = explode("/", $file_path);
-        $filename = $file_path_exploded[count($file_path_exploded) - 1];
-        $file_url = "http://boards.ru/uploads/".$filename;
-        $user["image"] = $file_url;
-        
+    $pdo = getConnection();
+    $newUser = array_merge($user, $attributes);
+
+    if (isset($attributes['password']))
+        $password = password_hash($newUser['password'], PASSWORD_BCRYPT);
+    else
+        $password = $user['password'];
+
+    $statement = $pdo->prepare("update users set login = ?, password = ?, active = ?, image = ? where id = ?");
+    $newUser['active'] = $newUser['active'] ?  'true' : 'false';
+
+    try {
+        $statement->execute([$newUser['login'], $password, $newUser['active'], $newUser['image'], $user["id"]]);
+    } catch (PDOException $exception) {
+        if ($exception->errorInfo[0] === 23505)
+            throw new InvalidArgumentException("duplicate login");
+        throw $exception;
     }
+}
     
-    $users[] = $user;
-
-    
-    file_put_contents(USERS_FILE, json_encode($users));
-    return $user;
+function getUser($id) {
+    $pdo = getConnection();
+    $statement = $pdo->prepare("select * from users where id = ?");
+    $statement->execute([$id]);
+    return $statement->fetch();
 }
 
-
-
-function deleteUser($uuid) {
-    editUser($uuid, ["active" => false]);
+function getUsers($limit = PHP_INT_MAX, $page = 0)  {
+    $pdo = getConnection();
+    $statement = $pdo->prepare("select * from users limit ? offset ?");
+    $statement->execute([$limit, $page * $limit]);
+    return $statement->fetchAll();
 }
 
-function editUser($uuid, $attributes) {
-    $users = array_map(function($user) use ($uuid, $attributes) {
-          
-        if ($user["uuid"] == $uuid) {
-            return array_merge($user, $attributes);
-        } else {
-            return $user;
-        }
-    }, getUsers());
+function findUser($login) {
+    $pdo = getConnection();
+    $result = $pdo->query("select * from users where login = '$login'");
+    $user = $result->fetch();
 
-    file_put_contents(USERS_FILE, json_encode($users));
-}
-
-function getUser($uuid) {
-    foreach (getUsers() as $user) {
-        if($user["uuid"] == $uuid) {
+    if ($user === false)
+        return null;
+    else
         return $user;
-        }
-    }
-    return null;
 }
-    
-function getUsers($limit = PHP_INT_MAX, $offset = 0)  {
-    if (file_exists(USERS_FILE)) {
-        $result = json_decode(file_get_contents(USERS_FILE), true);
-                
-        $result = array_slice($result, $offset * $limit, $limit);
-        
-        return $result;
-    } else {
-        throw new Exception("User file not found");
-    }
-}
-
-
