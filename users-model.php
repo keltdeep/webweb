@@ -47,7 +47,7 @@ function editUser($user, $attributes) {
     $newUser = array_merge($user, $attributes);
 
     if (isset($attributes['password']))
-        $password = password_hash($newUser['password'], PASSWORD_BCRYPT);
+        $password = $newUser['password'];
     else
         $password = $user['password'];
 
