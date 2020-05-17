@@ -1,5 +1,5 @@
 <?php
-
+// include "db.php";
 include "util.php";
 /**
  * @param $login
@@ -39,7 +39,7 @@ function deleteUser($id) {
  */
 
 function editUser($user, $attributes) {
-    if (!is_null($attributes['password']) && mb_strlen($attributes['password']) < 6) {
+    if (!is_null($attributes['password']) && mb_strlen($attributes['password']) < 5) {
         throw new LengthException("invalid password");
     }
 

@@ -92,15 +92,25 @@ if (startsWith($requestUri, "/api/users/")) {
             $attributes["password"] = password_hash($password, PASSWORD_BCRYPT);
         }
 
-        if (!empty($isActive)) {
-            $attributes["active"] = true;
-        } else {
-            $attributes["active"] = false;
-        }
+        $attributes["active"] = $isActive == 'on';
        
-        editUser($userId, $attributes);
-        header('Location: /users');
+        try {
+            editUser($user, $attributes);
+            header('Location: /users');
+        } catch (LengthException $exception) {
+            die("Слишком короткий пароль");
+        } catch (InvalidArgumentException $exception) {
+            die("Логин уже существует");
+        } catch (Exception $exception) {
+            die("Что то пошло не так, свяжитесь с нашей тех поддержкой");
+        }
+
         die();
+
+
+        // editUser($userId, $attributes);
+        // header('Location: /users');
+        // die();
     }
 
     if ($requestMethod == "DELETE") {
